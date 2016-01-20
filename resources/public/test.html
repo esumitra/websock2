@@ -1,0 +1,43 @@
+<html>
+    <head>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Test window close</title>
+	<script src="https://code.jquery.com/jquery-1.7.2.min.js"></script>
+    </head>
+    <body>
+	<h3>Window Close Test</h3>
+	<p>Access in new window at
+	    <a href="http://esumitra:3000/test.html">http://esumitra:3000/test.html</a>
+	</p>
+	<script type="text/javascript">
+	$(function(){
+	    console.log("document ready");
+	    window.onbeforeunload = unloadHandler;
+	    window.onfocus = focusHandler;
+	});
+	var lessonClosed = false;
+	function unloadHandler(){
+	    console.log("[unloadHandler]");
+	    $.get("/close/1",function(resp){
+		console.log("server response for unloadHandler");
+		lessonClosed = true;
+	    });
+	    return "Are you sure?";
+	}
+	function focusHandler(){
+	    console.log("[focusHandler]");
+	    if (lessonClosed === true) {
+		$.get("/unclose/2",function(resp){
+		    console.log("server response for focusHandler");
+		    lessonClosed = false;
+		});
+	    }
+	}
+	</script>
+    </body>
+</html>
+
+
+
+
