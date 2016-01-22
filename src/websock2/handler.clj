@@ -2,6 +2,7 @@
   (:require [compojure.core :refer [defroutes routes wrap-routes]]
             [websock2.layout :refer [error-page]]
             [websock2.routes.home :refer [home-routes]]
+            [websock2.routes.websockets :refer [websocket-routes]]
             [websock2.middleware :as middleware]
             [clojure.tools.logging :as log]
             [compojure.route :as route]
@@ -38,4 +39,11 @@
         (error-page {:status 404
                      :title "page not found"})))))
 
-(def app (middleware/wrap-base #'app-routes))
+;; Need to redefine app to support websockets
+;; (def app (middleware/wrap-base #'app-routes))
+
+(def app
+  (-> (routes
+       websocket-routes
+       (wrap-routes home-routes middleware/wrap-csrf))
+      middleware/wrap-base))

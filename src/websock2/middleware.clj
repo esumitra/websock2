@@ -46,9 +46,10 @@
 (defn wrap-formats [handler]
   (wrap-restful-format handler {:formats [:json-kw :transit-json :transit-msgpack]}))
 
+;; need to remove wrap format as it interferes with websockets
 (defn wrap-base [handler]
   (-> ((:middleware defaults) handler)
-      wrap-formats
+      ;; wrap-formats
       wrap-webjars
       (wrap-defaults
         (-> site-defaults
